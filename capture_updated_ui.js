@@ -12,10 +12,11 @@ async function capture() {
   });
 
   const context = await browser.newContext({
-    viewport: { width: 390, height: 844 },
+    viewport: { width: 360, height: 780 },
     deviceScaleFactor: 2,
     isMobile: true,
-    hasTouch: true
+    hasTouch: true,
+    colorScheme: 'dark'
   });
 
   const page = await context.newPage();
@@ -41,6 +42,15 @@ async function capture() {
     fullPage: false
   });
   console.log('✓ Copied active animation state captured.');
+
+  // 2b. Scroll to Preview section
+  await page.locator('.preview-section').scrollIntoViewIfNeeded();
+  await page.waitForTimeout(300);
+  await page.screenshot({
+    path: path.join(ARTIFACT_DIR, 'preview_copypaste_box.png'),
+    fullPage: false
+  });
+  console.log('✓ Preview section captured.');
 
   // 3. Scroll to Roster section
   await page.locator('.roster-section').scrollIntoViewIfNeeded();

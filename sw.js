@@ -3,7 +3,7 @@
    Compatible with Android (Chrome, Samsung Internet) and iOS (Safari PWA)
    ========================================================================== */
 
-const CACHE_NAME = 'absenteesnap-v2';
+const CACHE_NAME = 'absenteesnap-v3';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -43,37 +43,55 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Cache-First strategy with network fallback and offline navigation support
+// Network-First for navigation (page HTML), Cache-First for static assets
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
-  const url = new URL(event.request.url);
+  // For HTML navigation requests, try network first so phone gets instant updates
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const clone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+          }
+          return networkResponse;
+        })
+        .catch(() => {
+          return caches.match('./index.html') || caches.match('./');
+        })
+    );
+    return;
+  }
 
-  // Handle same-origin requests or local files
+  // For assets, Cache-First with background revalidation
   event.respondWith(
     caches.match(event.request, { ignoreSearch: true }).then((cachedResponse) => {
       if (cachedResponse) {
-        // Return instantly from offline cache
+        // Fetch in background to update cache for next time
+        fetch(event.request)
+          .then((networkResponse) => {
+            if (networkResponse && networkResponse.status === 200) {
+              caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse));
+            }
+          })
+          .catch(() => {});
         return cachedResponse;
       }
 
-      // If not in cache, fetch from network and dynamically cache
       return fetch(event.request)
         .then((networkResponse) => {
           if (!networkResponse || networkResponse.status !== 200 || networkResponse.type === 'opaque') {
             return networkResponse;
           }
-
-          // Clone and store in cache for subsequent offline sessions
           const responseToCache = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
             cache.put(event.request, responseToCache);
           });
-
           return networkResponse;
         })
         .catch(() => {
-          // If offline and requesting navigation, return cached index.html
           if (event.request.mode === 'navigate') {
             return caches.match('./index.html');
           }

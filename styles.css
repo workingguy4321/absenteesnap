@@ -78,6 +78,12 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+html {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+}
+
 body {
   font-family: var(--font-sans);
   background-color: var(--bg-page);
@@ -85,7 +91,11 @@ body {
   line-height: 1.45;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
-  padding-bottom: 100px; /* Space for sticky phone dock */
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  position: relative;
+  touch-action: pan-y pinch-zoom;
 }
 
 .sr-only {
@@ -101,12 +111,16 @@ body {
 
 /* Mobile Layout Container */
 .app-layout {
+  width: 100%;
   max-width: 580px;
   margin: 0 auto;
-  padding: 12px 14px;
+  padding: 10px 12px;
+  padding-bottom: calc(85px + env(safe-area-inset-bottom, 20px));
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* Sleek Mobile Header */
@@ -115,27 +129,32 @@ body {
   align-items: center;
   justify-content: space-between;
   background: var(--bg-card);
-  padding: 12px 16px;
+  padding: 10px 12px;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-subtle);
   box-shadow: var(--shadow-sm);
   position: sticky;
-  top: 8px;
+  top: 6px;
   z-index: 20;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .header-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
 }
 
 .brand-badge {
-  font-size: 22px;
-  width: 40px;
-  height: 40px;
+  font-size: 18px;
+  width: 34px;
+  height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -148,30 +167,44 @@ body {
 .brand-text-group {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
+  min-width: 0;
+  overflow: hidden;
 }
 
-.brand-sub-row {
+.brand-title-row {
   display: flex;
   align-items: center;
   gap: 6px;
+  min-width: 0;
   flex-wrap: nowrap;
 }
 
 .brand-title {
-  font-size: 1.1rem;
+  font-size: 1.02rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--text-main);
+  white-space: nowrap;
+}
+
+.class-pill {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 170px;
 }
 
 .badge-offline {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  font-size: 0.65rem;
+  gap: 2px;
+  font-size: 0.60rem;
   font-weight: 700;
-  padding: 1px 6px;
+  padding: 1px 5px;
   border-radius: var(--radius-full);
   background: rgba(16, 185, 129, 0.15);
   color: #10b981;
@@ -179,6 +212,7 @@ body {
   letter-spacing: 0.02em;
   text-transform: uppercase;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .badge-offline.is-disconnected {
@@ -198,20 +232,10 @@ body {
   color: #3b82f6;
 }
 
-.class-pill {
-  font-size: 0.76rem;
-  color: var(--text-muted);
-  font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 145px;
-}
-
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   flex-shrink: 0;
 }
 
@@ -219,8 +243,8 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 35px;
-  height: 35px;
+  width: 34px;
+  height: 34px;
   border-radius: var(--radius-full);
   border: 1px solid var(--border-subtle);
   background: var(--bg-subtle);
@@ -244,12 +268,14 @@ body {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-  padding: 16px;
+  padding: 12px 14px;
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   transition: border-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Session Strip (Date + Period) */
@@ -257,27 +283,33 @@ body {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-  padding: 12px 14px;
+  padding: 10px 12px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   box-shadow: var(--shadow-sm);
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .session-meta-row {
   display: flex;
-  gap: 8px;
+  gap: 6px;
+  width: 100%;
 }
 
 .date-chip-wrapper {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   background: var(--bg-page);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  padding: 6px 10px;
+  padding: 6px 8px;
   flex-shrink: 0;
+  max-width: 140px;
 }
 
 .meta-icon {
@@ -289,14 +321,16 @@ body {
   background: transparent;
   color: var(--text-main);
   font-family: var(--font-sans);
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 600;
   outline: none;
   cursor: pointer;
+  width: 105px;
 }
 
 .subject-input-wrapper {
   flex: 1;
+  min-width: 0;
 }
 
 .subject-input {
@@ -305,10 +339,10 @@ body {
   background: var(--bg-page);
   color: var(--text-main);
   font-family: var(--font-sans);
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 500;
   border-radius: var(--radius-md);
-  padding: 8px 12px;
+  padding: 6px 10px;
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
@@ -324,6 +358,8 @@ body {
   padding-bottom: 2px;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  width: 100%;
+  max-width: 100%;
 }
 .period-scroll-container::-webkit-scrollbar {
   display: none;
@@ -336,17 +372,18 @@ body {
 }
 
 .period-chip {
-  padding: 6px 14px;
+  padding: 6px 12px;
   border-radius: var(--radius-full);
   border: 1px solid var(--border-subtle);
   background: var(--bg-subtle);
   color: var(--text-muted);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.2s var(--ease-spring);
   user-select: none;
+  flex-shrink: 0;
 }
 
 .period-chip:hover {
@@ -370,11 +407,13 @@ body {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-  padding: 12px 16px;
+  padding: 10px 14px;
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .stats-grid {
@@ -393,7 +432,7 @@ body {
 
 .stat-num {
   font-family: var(--font-mono);
-  font-size: 1.35rem;
+  font-size: 1.15rem;
   font-weight: 800;
   line-height: 1.1;
   transition: transform 0.2s var(--ease-spring);
@@ -452,7 +491,7 @@ body {
 
 .input-lead-icon {
   position: absolute;
-  left: 12px;
+  left: 9px;
   color: var(--text-dim);
   pointer-events: none;
 }
@@ -460,13 +499,13 @@ body {
 .quick-pill-input {
   width: 100%;
   min-width: 0;
-  padding: 10px 12px 10px 36px;
+  padding: 8px 10px 8px 30px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-subtle);
   background: var(--bg-page);
   color: var(--text-main);
   font-family: var(--font-mono);
-  font-size: 0.9rem;
+  font-size: 0.84rem;
   font-weight: 600;
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
@@ -478,13 +517,13 @@ body {
 }
 
 .btn-pill-primary {
-  padding: 10px 18px;
+  padding: 8px 14px;
   border-radius: var(--radius-md);
   border: none;
   background: var(--primary-gradient);
   color: #ffffff;
   font-family: var(--font-sans);
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
@@ -497,15 +536,16 @@ body {
 }
 
 .btn-pill-clear {
-  padding: 10px 14px;
+  padding: 8px 10px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-subtle);
   background: var(--bg-subtle);
   color: var(--text-muted);
   font-family: var(--font-sans);
-  font-size: 0.85rem;
+  font-size: 0.80rem;
   font-weight: 600;
   cursor: pointer;
+  white-space: nowrap;
   transition: all 0.15s;
   flex-shrink: 0;
 }
@@ -682,8 +722,9 @@ body {
 .preview-collapse.is-open {
   max-height: 240px;
   overflow-y: auto;
+  overflow-x: auto;
   opacity: 1;
-  padding: 12px 14px;
+  padding: 10px 10px;
   margin-top: 6px;
   border: 1px solid var(--border-subtle);
   border-left: 3px solid var(--whatsapp);
@@ -691,11 +732,13 @@ body {
 
 .preview-text {
   font-family: var(--font-mono);
-  font-size: 0.82rem;
+  font-size: 0.70rem;
+  letter-spacing: -0.02em;
   color: var(--text-main);
   white-space: pre-wrap;
-  word-break: break-word;
-  line-height: 1.45;
+  word-break: normal;
+  overflow-wrap: break-word;
+  line-height: 1.4;
 }
 
 /* Roster Section & Grid */
